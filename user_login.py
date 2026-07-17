@@ -143,7 +143,7 @@ with col1:
 
             st.success("Login Successful!")
 
-            st.switch_page("index.py")
+            st.switch_page("pages/index.py")
 
         else:
 
