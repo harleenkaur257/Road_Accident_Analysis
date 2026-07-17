@@ -21,7 +21,7 @@ year_col = "year"
 df.info()
 st.set_page_config(
     page_title="Road Accident Analysis",
-    page_icon="images/logo.png",
+    page_icon="logo.png",
     layout="wide"
 )
 
@@ -206,12 +206,12 @@ if opt == "Home":
     col1, col2 = st.columns([1, 6])
     
     with col1:
-        st.image("images/logo.png", width=100)
+        st.image("logo.png", width=100)
     with col2:
         st.title("Road Accident Analysis")
         st.caption("Data Analysis & Visualization Dashboard")
 
-    st.video("images/road.mp4")
+    st.video("road.mp4")
     st.markdown("---")
 
 
@@ -244,10 +244,10 @@ if opt == "Home":
             st.metric("Cities", "N/A")
     st.markdown("---")
     st.title(" Features of Road Accident Analysis")
-    img1 = get_base64("images/feature1.jpg")
-    img2 = get_base64("images/feature2.jpg")
-    img3 = get_base64("images/feature3.jpg")
-    img4 = get_base64("images/feature4.jpg")
+    img1 = get_base64("feature1.jpg")
+    img2 = get_base64("feature2.jpg")
+    img3 = get_base64("feature3.jpg")
+    img4 = get_base64("feature4.jpg")
     col1, col2, col3, col4 = st.columns(4)
 
     # ---------------- Card 1 ----------------
@@ -310,7 +310,7 @@ if opt == "Home":
     with col1:
         # Image
         st.markdown(f"""
-        <img src="data:image/jpg;base64,{img1}"
+        <img src="data:jpg;base64,{img1}"
             style="width:100%; height:200px;
             object-fit:cover; border-radius:12px;">
         """, unsafe_allow_html=True)
@@ -331,7 +331,7 @@ if opt == "Home":
     with col2:
 
         st.markdown(f"""
-        <img src="data:image/jpg;base64,{img2}"
+        <img src="data:jpg;base64,{img2}"
         style="width:100%; height:200px; object-fit:cover; border-radius:12px;">
         """, unsafe_allow_html=True)
 
@@ -351,7 +351,7 @@ if opt == "Home":
     with col3:
 
         st.markdown(f"""
-        <img src="data:image/jpg;base64,{img3}"
+        <img src="data:jpg;base64,{img3}"
         style="width:100%; height:200px; object-fit:cover; border-radius:12px;">
         """, unsafe_allow_html=True)
 
@@ -370,7 +370,7 @@ if opt == "Home":
     with col4:
 
         st.markdown(f"""
-        <img src="data:image/jpg;base64,{img4}"
+        <img src="data:jpg;base64,{img4}"
         style="width:100%; height:200px; object-fit:cover; border-radius:12px;">
         """, unsafe_allow_html=True)
 
@@ -396,14 +396,14 @@ if opt == "Home":
 
     # Image paths
     images = [
-        "images/gallery1.PNG",
-        "images/gallery2.PNG",
-        "images/gallery3.PNG",
-        "images/gallery4.PNG",
-        "images/gallery5.PNG",
-        "images/gallery6.PNG",
-        "images/gallery7.PNG",
-        "images/gallery8.PNG",
+        "gallery1.PNG",
+        "gallery2.PNG",
+        "gallery3.PNG",
+        "gallery4.PNG",
+        "gallery5.PNG",
+        "gallery6.PNG",
+        "gallery7.PNG",
+        "gallery8.PNG",
     ]           
 
     # Display 4 images per row
@@ -423,7 +423,7 @@ if opt == "Home":
                         box-shadow:0 4px 10px rgba(0,0,0,0.2);
                         margin-bottom:20px;
                     ">
-                        <img src="data:image/jpeg;base64,{img64}"
+                        <img src="data:jpeg;base64,{img64}"
                             style="
                                 width:100%;
                                 height:220px;
