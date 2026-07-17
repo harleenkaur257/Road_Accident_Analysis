@@ -14,7 +14,7 @@ if "logged_in" not in st.session_state:
 
 # If already logged in
 if st.session_state.logged_in:
-    st.switch_page("index.py")
+    st.switch_page("pages/index.py")
 
 # ---------------- CSS ----------------
 
