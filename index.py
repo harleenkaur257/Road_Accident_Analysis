@@ -1,6 +1,8 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
-import plotly.express as px       #visualization
+import plotly.express as px  
+import plotly.graph_objects as go
+#visualization
 import pandas as pd
 import requests
 import base64
@@ -19,7 +21,7 @@ year_col = "year"
 df.info()
 st.set_page_config(
     page_title="Road Accident Analysis",
-    page_icon="images/logo.png",
+    page_icon="logo.png",
     layout="wide"
 )
 
@@ -32,9 +34,8 @@ with st.sidebar:
             "Processing",
             "Visualization",
             "Accident Map",
-            "Reports",
             "Query",
-            "About",
+            "About"
         ],
         icons=[
             "house",
@@ -42,9 +43,8 @@ with st.sidebar:
             "gear",
             "bar-chart",
             "geo-alt",
-            "file-earmark-text",
             "chat-dots",
-            "info-circle",
+            "info-circle"
         ],
         menu_icon="display",
         default_index=0,
@@ -206,12 +206,12 @@ if opt == "Home":
     col1, col2 = st.columns([1, 6])
     
     with col1:
-        st.image("images/logo.png", width=100)
+        st.image("logo.png", width=100)
     with col2:
         st.title("Road Accident Analysis")
         st.caption("Data Analysis & Visualization Dashboard")
 
-    st.video("images/road.mp4")
+    st.video("road.mp4")
     st.markdown("---")
 
 
@@ -244,10 +244,10 @@ if opt == "Home":
             st.metric("Cities", "N/A")
     st.markdown("---")
     st.title(" Features of Road Accident Analysis")
-    img1 = get_base64("images/feature1.jpg")
-    img2 = get_base64("images/feature2.jpg")
-    img3 = get_base64("images/feature3.jpg")
-    img4 = get_base64("images/feature4.jpg")
+    img1 = get_base64("feature1.jpg")
+    img2 = get_base64("feature2.jpg")
+    img3 = get_base64("feature3.jpg")
+    img4 = get_base64("feature4.jpg")
     col1, col2, col3, col4 = st.columns(4)
 
     # ---------------- Card 1 ----------------
@@ -310,7 +310,7 @@ if opt == "Home":
     with col1:
         # Image
         st.markdown(f"""
-        <img src="data:image/jpg;base64,{img1}"
+        <img src="data:jpg;base64,{img1}"
             style="width:100%; height:200px;
             object-fit:cover; border-radius:12px;">
         """, unsafe_allow_html=True)
@@ -331,7 +331,7 @@ if opt == "Home":
     with col2:
 
         st.markdown(f"""
-        <img src="data:image/jpg;base64,{img2}"
+        <img src="data:jpg;base64,{img2}"
         style="width:100%; height:200px; object-fit:cover; border-radius:12px;">
         """, unsafe_allow_html=True)
 
@@ -351,7 +351,7 @@ if opt == "Home":
     with col3:
 
         st.markdown(f"""
-        <img src="data:image/jpg;base64,{img3}"
+        <img src="data:jpg;base64,{img3}"
         style="width:100%; height:200px; object-fit:cover; border-radius:12px;">
         """, unsafe_allow_html=True)
 
@@ -370,7 +370,7 @@ if opt == "Home":
     with col4:
 
         st.markdown(f"""
-        <img src="data:image/jpg;base64,{img4}"
+        <img src="data:jpg;base64,{img4}"
         style="width:100%; height:200px; object-fit:cover; border-radius:12px;">
         """, unsafe_allow_html=True)
 
@@ -396,14 +396,14 @@ if opt == "Home":
 
     # Image paths
     images = [
-        "images/gallery1.PNG",
-        "images/gallery2.PNG",
-        "images/gallery3.PNG",
-        "images/gallery4.PNG",
-        "images/gallery5.PNG",
-        "images/gallery6.PNG",
-        "images/gallery7.PNG",
-        "images/gallery8.PNG",
+        "gallery1.PNG",
+        "gallery2.PNG",
+        "gallery3.PNG",
+        "gallery4.PNG",
+        "gallery5.PNG",
+        "gallery6.PNG",
+        "gallery7.PNG",
+        "gallery8.PNG",
     ]           
 
     # Display 4 images per row
@@ -423,7 +423,7 @@ if opt == "Home":
                         box-shadow:0 4px 10px rgba(0,0,0,0.2);
                         margin-bottom:20px;
                     ">
-                        <img src="data:image/jpeg;base64,{img64}"
+                        <img src="data:jpeg;base64,{img64}"
                             style="
                                 width:100%;
                                 height:220px;
@@ -820,6 +820,7 @@ elif opt == "Processing":
     h1, h2, h3, h4 {
         color: #ffffff !important;
         font-family: 'Segoe UI', sans-serif;
+        font-size:40px;
     }
 
 
@@ -1034,31 +1035,6 @@ elif opt == "Processing":
 
         else:
             st.success("✅ No missing values found in the dataset.")
-    # ==========================================================
-    # Processing Steps
-    # ==========================================================
-    with t3:
-
-        st.subheader("🧹 Data Cleaning Steps")
-
-        st.info("""
-        The following preprocessing operations are performed:
-        • Removed the 'festival' column because it contains many missing values.
-        • Removed rows containing null values.
-        • Reset the dataframe index.
-        """)
-
-        processed_df = df.copy()
-
-        processed_df.drop(columns=["festival"], inplace=True)
-        processed_df.dropna(inplace=True)
-        processed_df.reset_index(drop=True, inplace=True)
-
-        st.code("""
-            1. Remove 'festival' column
-            2. Drop rows containing missing values
-            3. Reset dataframe index
-        """)
 
     # ==========================================================
     # Cleaned Dataset
@@ -1189,7 +1165,52 @@ elif opt == "Processing":
 
 elif opt == "Visualization":
     st.title("Visualization") 
+    st.markdown(
+    """
+    <style>
 
+    /* Tab Hover Effect */
+    .stTabs [data-baseweb="tab"]:hover {
+        background-color: #00B4D8 !important;
+        color: black !important;
+        transform: scale(1.05);
+        transition: 0.3s ease;
+        cursor: pointer;
+    }
+
+
+    /* Tab List */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 12px;
+        background-color: #0B2A5B;
+        padding: 12px;
+        border-radius: 15px;
+    }
+
+
+    /* Normal Tab */
+    .stTabs [data-baseweb="tab"] {
+        background-color: #123C73;
+        color: white !important;
+        padding: 12px 22px;
+        border-radius: 10px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+    
+
+    /* Active Tab */
+    .stTabs [aria-selected="true"] {
+        background-color: #00B4D8 !important;
+        color: black !important;
+        box-shadow: 0px 0px 15px #00B4D8;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+    )
+    
 
     st.markdown(""" Visualization is the graphical representation of data using charts, graphs, and plots. 
                 It helps to identify patterns, trends, and relationships in data. In this project, visualization is used to 
@@ -1364,39 +1385,85 @@ elif opt == "Visualization":
 
             st.subheader("🚑 State vs Total Casualties")
 
-
+            # ===============================
+            # Slider
+            # ===============================
             rows = st.slider(
                 "Select number of states to display",
                 min_value=5,
                 max_value=len(df["state"].unique()),
-                value=len(df["state"].unique()),
+                value=min(15, len(df["state"].unique())),
                 key="casualty_slider"
             )
 
-
-            cas = df.groupby("state")["casualties"].sum().reset_index()
-
-
-            cas = cas.sort_values(
-                by="casualties",
-                ascending=False
-            ).head(rows)
-
-
-            st.dataframe(
-                cas,
-                use_container_width=True
+            # ===============================
+            # State-wise Casualties
+            # ===============================
+            cas = (
+                df.groupby("state", as_index=False)["casualties"]
+                .sum()
+                .sort_values(by="casualties", ascending=False)
+                .head(rows)
             )
 
-
-            fig = px.bar(
+            # ===============================
+            # Data Table
+            # ===============================
+            st.dataframe(
                 cas,
-                x="state",
-                y="casualties",
+                use_container_width=True,
+                hide_index=True
+            )
+
+            # ===============================
+            # Bubble Chart
+            # ===============================
+            fig = px.scatter(
+                cas,
+                x="casualties",
+                y="state",
+                size="casualties",
                 color="casualties",
+                hover_name="state",
+                text="casualties",
+                size_max=55,
+                color_continuous_scale="Turbo",
                 title=f"Top {rows} States - Total Casualties"
             )
 
+            fig.update_traces(
+                mode="markers+text",
+                textposition="middle center",
+                marker=dict(
+                    line=dict(color="white", width=2),
+                    opacity=0.9
+                )
+            )
+
+            fig.update_layout(
+                template="plotly_dark",
+                paper_bgcolor="#061A40",
+                plot_bgcolor="#061A40",
+                font=dict(color="white"),
+                title=dict(
+                    x=0.5,
+                    font=dict(size=24)
+                ),
+                xaxis=dict(
+                    title="Total Casualties",
+                    showgrid=True,
+                    gridcolor="gray",
+                    zeroline=False
+                ),
+                yaxis=dict(
+                    title="State",
+                    showgrid=False
+                ),
+                coloraxis_colorbar=dict(
+                    title="Casualties"
+                ),
+                height=650
+            )
 
             st.plotly_chart(
                 fig,
@@ -1404,55 +1471,88 @@ elif opt == "Visualization":
             )
 
 
-
         # ==========================================================
-        # TAB 4 : VEHICLES INVOLVED
-        # ==========================================================
-        with state_tab4:
+# TAB 4 : VEHICLES INVOLVED
+# ==========================================================
+            with state_tab4:
 
-            st.subheader("🚗 State vs Average Vehicles Involved")
+                st.subheader("🚗 State vs Average Vehicles Involved")
 
+                # --------------------------------------
+                # Slider
+                # --------------------------------------
+                rows = st.slider(
+                    "Select number of states to display",
+                    min_value=5,
+                    max_value=len(df["state"].unique()),
+                    value=min(15, len(df["state"].unique())),
+                    key="vehicle_slider"
+                )
 
-            rows = st.slider(
-                "Select number of states to display",
-                min_value=5,
-                max_value=len(df["state"].unique()),
-                value=len(df["state"].unique()),
-                key="vehicle_slider"
-            )
+                # --------------------------------------
+                # State-wise Average Vehicles Involved
+                # --------------------------------------
+                veh = (
+                    df.groupby("state", as_index=False)["vehicles_involved"]
+                    .mean()
+                    .sort_values(by="vehicles_involved", ascending=False)
+                    .head(rows)
+                )
 
+                # Round values
+                veh["vehicles_involved"] = veh["vehicles_involved"].round(2)
 
-            veh = df.groupby("state")["vehicles_involved"].mean().reset_index()
+                # --------------------------------------
+                # Data Table
+                # --------------------------------------
+                st.dataframe(
+                    veh,
+                    use_container_width=True,
+                    hide_index=True
+                )
 
+                # --------------------------------------
+                # Treemap Chart
+                # --------------------------------------
+                fig = px.treemap(
+                    veh,
+                    path=["state"],
+                    values="vehicles_involved",
+                    color="vehicles_involved",
+                    color_continuous_scale="Turbo",
+                    title=f"Top {rows} States - Average Vehicles Involved"
+                )
 
-            veh = veh.sort_values(
-                by="vehicles_involved",
-                ascending=False
-            ).head(rows)
+                fig.update_traces(
+                    textinfo="label+value",
+                    textfont_size=15,
+                    hovertemplate="<b>%{label}</b><br>Average Vehicles: %{value:.2f}<extra></extra>"
+                )
 
+                fig.update_layout(
+                    template="plotly_dark",
+                    paper_bgcolor="#061A40",
+                    plot_bgcolor="#061A40",
+                    font=dict(
+                        color="white",
+                        size=14
+                    ),
+                    title=dict(
+                        text=f"🚗 Top {rows} States - Average Vehicles Involved",
+                        x=0.5,
+                        font=dict(size=24)
+                    ),
+                    coloraxis_colorbar=dict(
+                        title="Avg Vehicles"
+                    ),
+                    margin=dict(t=70, l=20, r=20, b=20),
+                    height=650
+                )
 
-            st.dataframe(
-                veh,
-                use_container_width=True
-            )
-
-
-            fig = px.bar(
-                veh,
-                x="state",
-                y="vehicles_involved",
-                color="vehicles_involved",
-                title=f"Top {rows} States - Average Vehicles Involved"
-            )
-
-
-            st.plotly_chart(
-                fig,
-                use_container_width=True
-            )
-
-
-
+                st.plotly_chart(
+                    fig,
+                    use_container_width=True
+                )
         # ==========================================================
         # TAB 5 : TEMPERATURE
         # ==========================================================
@@ -1505,39 +1605,63 @@ elif opt == "Visualization":
 
             st.subheader("🛣️ State vs Average Number of Lanes")
 
-
             rows = st.slider(
                 "Select number of states to display",
                 min_value=5,
                 max_value=len(df["state"].unique()),
-                value=len(df["state"].unique()),
+                value=min(15, len(df["state"].unique())),
                 key="lane_slider"
             )
 
+            # Select top states based on average lanes
+            lane = (
+                df.groupby("state", as_index=False)["lanes"]
+                .mean()
+                .sort_values(by="lanes", ascending=False)
+                .head(rows)
+            )
 
-            lane = df.groupby("state")["lanes"].mean().reset_index()
-
-
-            lane = lane.sort_values(
-                by="lanes",
-                ascending=False
-            ).head(rows)
-
+            lane["lanes"] = lane["lanes"].round(2)
 
             st.dataframe(
                 lane,
-                use_container_width=True
+                use_container_width=True,
+                hide_index=True
             )
 
+            # Keep only selected states from original dataframe
+            lane_df = df[df["state"].isin(lane["state"])]
 
-            fig = px.bar(
-                lane,
+            # Violin Plot
+            fig = px.violin(
+                lane_df,
                 x="state",
                 y="lanes",
-                color="lanes",
-                title=f"Top {rows} States - Average Number of Lanes"
+                color="state",
+                box=True,
+                points="all",
+                title=f"Top {rows} States - Distribution of Number of Lanes"
             )
 
+            fig.update_traces(
+                meanline_visible=True
+            )
+
+            fig.update_layout(
+                template="plotly_dark",
+                paper_bgcolor="#061A40",
+                plot_bgcolor="#061A40",
+                font=dict(color="white"),
+                title=dict(
+                    text=f"🛣️ Top {rows} States - Distribution of Number of Lanes",
+                    x=0.5,
+                    font=dict(size=24)
+                ),
+                xaxis_title="State",
+                yaxis_title="Number of Lanes",
+                height=650,
+                showlegend=False
+            )
 
             st.plotly_chart(
                 fig,
@@ -1545,46 +1669,58 @@ elif opt == "Visualization":
             )
 
 
-
         # ==========================================================
-        # TAB 7 : ACCIDENT HOUR
+        # TAB 7 : ACCIDENT HOUR (SUNBURST)
         # ==========================================================
         with state_tab7:
 
             st.subheader("⏰ State vs Average Accident Hour")
 
-
             rows = st.slider(
                 "Select number of states to display",
                 min_value=5,
                 max_value=len(df["state"].unique()),
-                value=len(df["state"].unique()),
+                value=min(15, len(df["state"].unique())),
                 key="hour_slider"
             )
 
+            hr = (
+                df.groupby("state", as_index=False)["hour"]
+                .mean()
+                .sort_values(by="hour", ascending=False)
+                .head(rows)
+            )
 
-            hr = df.groupby("state")["hour"].mean().reset_index()
-
-
-            hr = hr.sort_values(
-                by="hour",
-                ascending=False
-            ).head(rows)
-
+            hr["hour"] = hr["hour"].round(1)
 
             st.dataframe(
                 hr,
-                use_container_width=True
+                use_container_width=True,
+                hide_index=True
             )
 
 
-            fig = px.scatter(
+            # Sunburst Chart
+            fig = px.sunburst(
                 hr,
-                x="state",
-                y="hour",
+                path=["state"],
+                values="hour",
                 color="hour",
-                size="hour",
+                color_continuous_scale="Turbo",
                 title=f"Top {rows} States - Average Accident Hour"
+            )
+
+
+            fig.update_layout(
+                template="plotly_dark",
+                paper_bgcolor="#061A40",
+                plot_bgcolor="#061A40",
+                font=dict(color="white"),
+                title=dict(
+                    x=0.5,
+                    font=dict(size=24)
+                ),
+                height=650
             )
 
 
@@ -1660,12 +1796,11 @@ elif opt == "Visualization":
 
 
             # =====================================================
-            # TAB 2 - RISK SCORE
+            # TAB 2 - RISK SCORE (DUMBBELL PLOT)
             # =====================================================
             with city_tab2:
 
-                st.subheader("📈 City vs Average Risk Score")
-
+                st.subheader("📈 City vs Risk Score Range")
 
                 rows = st.slider(
                     "Select number of cities",
@@ -1675,28 +1810,94 @@ elif opt == "Visualization":
                     key="city_risk_slider"
                 )
 
-
-                risk = df.groupby("city")["risk_score"].mean().reset_index()
-
+                # Calculate min and max risk score for each city
+                risk = (
+                    df.groupby("city")["risk_score"]
+                    .agg(["min", "max", "mean"])
+                    .reset_index()
+                )
 
                 risk = risk.sort_values(
-                    "risk_score",
+                    "mean",
                     ascending=False
                 ).head(rows)
+
+                risk["min"] = risk["min"].round(2)
+                risk["max"] = risk["max"].round(2)
+                risk["mean"] = risk["mean"].round(2)
 
 
                 st.dataframe(
                     risk,
-                    use_container_width=True
+                    use_container_width=True,
+                    hide_index=True
                 )
 
 
-                fig = px.bar(
-                    risk,
-                    x="city",
-                    y="risk_score",
-                    color="risk_score",
-                    title=f"Top {rows} Cities by Average Risk Score"
+                # ==============================
+                # Dumbbell Plot
+                # ==============================
+
+                fig = go.Figure()
+
+
+                # Connecting lines
+                for i in range(len(risk)):
+
+                    fig.add_trace(
+                        go.Scatter(
+                            x=[risk.iloc[i]["min"], risk.iloc[i]["max"]],
+                            y=[risk.iloc[i]["city"], risk.iloc[i]["city"]],
+                            mode="lines",
+                            line=dict(
+                                color="gray",
+                                width=4
+                            ),
+                            showlegend=False
+                        )
+                    )
+
+
+                # Minimum points
+                fig.add_trace(
+                    go.Scatter(
+                        x=risk["min"],
+                        y=risk["city"],
+                        mode="markers",
+                        marker=dict(
+                            size=14,
+                            color="cyan"
+                        ),
+                        name="Minimum Risk"
+                    )
+                )
+
+
+                # Maximum points
+                fig.add_trace(
+                    go.Scatter(
+                        x=risk["max"],
+                        y=risk["city"],
+                        mode="markers",
+                        marker=dict(
+                            size=14,
+                            color="red"
+                        ),
+                        name="Maximum Risk"
+                    )
+                )
+
+
+                fig.update_layout(
+                    title=f"Top {rows} Cities - Risk Score Range",
+                    template="plotly_dark",
+                    paper_bgcolor="#061A40",
+                    plot_bgcolor="#061A40",
+                    font=dict(color="white"),
+                    title_x=0.5,
+                    xaxis_title="Risk Score",
+                    yaxis_title="City",
+                    height=650
                 )
 
 
@@ -1704,7 +1905,6 @@ elif opt == "Visualization":
                     fig,
                     use_container_width=True
                 )
-
 
             # =====================================================
             # TAB 3 - CASUALTIES
@@ -2083,6 +2283,7 @@ elif opt == "Visualization":
             st.subheader("📈 Average Risk Score by Weather")
 
 
+            # Select number of weather conditions
             rows = st.slider(
                 "Select number of weather conditions",
                 1,
@@ -2092,6 +2293,7 @@ elif opt == "Visualization":
             )
 
 
+            # Calculate average risk score
             risk = (
                 df.groupby("weather")["risk_score"]
                 .mean()
@@ -2099,6 +2301,7 @@ elif opt == "Visualization":
             )
 
 
+            # Sort and limit rows
             risk = (
                 risk.sort_values(
                     "risk_score",
@@ -2108,18 +2311,61 @@ elif opt == "Visualization":
             )
 
 
+            # Round risk score values
+            risk["risk_score"] = risk["risk_score"].round(2)
+
+
+            # Display table
             st.dataframe(
                 risk,
-                use_container_width=True
+                use_container_width=True,
+                hide_index=True
             )
 
 
-            fig = px.bar(
-                risk,
-                x="weather",
-                y="risk_score",
-                color="risk_score",
-                title="Average Risk Score by Weather"
+            # =====================================================
+            # Plotly Radar Chart
+            # =====================================================
+
+            import plotly.graph_objects as go
+
+
+            fig = go.Figure()
+
+
+            fig.add_trace(
+                go.Scatterpolar(
+                    r=risk["risk_score"],
+                    theta=risk["weather"],
+                    fill="toself",
+                    name="Risk Score",
+                    marker=dict(
+                        size=10
+                    )
+                )
+            )
+
+
+            fig.update_layout(
+                title={
+                    "text": "🌦️ Weather Condition vs Average Risk Score",
+                    "x":0.5
+                },
+
+                template="plotly_dark",
+
+                height=600,
+
+                polar=dict(
+                    bgcolor="#111111",
+                    radialaxis=dict(
+                        visible=True,
+                        range=[
+                            0,
+                            risk["risk_score"].max()+2
+                        ]
+                    )
+                )
             )
 
 
@@ -2147,6 +2393,7 @@ elif opt == "Visualization":
             )
 
 
+            # Group casualties by weather
             cas = (
                 df.groupby("weather")["casualties"]
                 .sum()
@@ -2163,73 +2410,76 @@ elif opt == "Visualization":
             )
 
 
+            # Display table
             st.dataframe(
                 cas,
-                use_container_width=True
+                use_container_width=True,
+                hide_index=True
             )
 
 
-            fig = px.bar(
-                cas,
-                x="weather",
-                y="casualties",
-                color="casualties",
-                title="Total Casualties by Weather"
-            )
+            # =====================================================
+            # Sankey Diagram
+            # =====================================================
+
+            import plotly.graph_objects as go
 
 
-            st.plotly_chart(
-                fig,
-                use_container_width=True
-            )
+            # Create nodes
+            weather_nodes = cas["weather"].tolist()
+
+            nodes = weather_nodes + ["Total Casualties"]
 
 
-
-        # =====================================================
-        # TAB 5 - VEHICLES
-        # =====================================================
-        with weather_tab5:
-
-            st.subheader("🚗 Vehicles Involved by Weather")
+            # Source and target
+            source = []
+            target = []
+            value = []
 
 
-            rows = st.slider(
-                "Select number of weather conditions",
-                1,
-                df["weather"].nunique(),
-                df["weather"].nunique(),
-                key="weather_vehicle_slider"
-            )
+            for i, row in cas.iterrows():
 
-
-            veh = (
-                df.groupby("weather")["vehicles_involved"]
-                .mean()
-                .reset_index()
-            )
-
-
-            veh = (
-                veh.sort_values(
-                    "vehicles_involved",
-                    ascending=False
+                source.append(
+                    i
                 )
-                .head(rows)
+
+                target.append(
+                    len(nodes)-1
+                )
+
+                value.append(
+                    row["casualties"]
+                )
+
+
+            # Create Sankey Figure
+            fig = go.Figure(
+                go.Sankey(
+
+                    node=dict(
+                        pad=20,
+                        thickness=25,
+                        label=nodes
+                    ),
+
+                    link=dict(
+                        source=source,
+                        target=target,
+                        value=value
+                    )
+                )
             )
 
 
-            st.dataframe(
-                veh,
-                use_container_width=True
-            )
+            fig.update_layout(
+                title={
+                    "text":"🌦️ Weather Conditions Flow to Total Casualties",
+                    "x":0.5
+                },
 
+                template="plotly_dark",
 
-            fig = px.bar(
-                veh,
-                x="weather",
-                y="vehicles_involved",
-                color="vehicles_involved",
-                title="Average Vehicles Involved by Weather"
+                height=600
             )
 
 
@@ -2238,7 +2488,83 @@ elif opt == "Visualization":
                 use_container_width=True
             )
 
+                    # =====================================================
+            # TAB 5 - VEHICLES
+            # =====================================================
+            with weather_tab5:
 
+                st.subheader("🚗 Vehicles Involved by Weather")
+
+
+                rows = st.slider(
+                    "Select number of weather conditions",
+                    1,
+                    df["weather"].nunique(),
+                    df["weather"].nunique(),
+                    key="weather_vehicle_slider"
+                )
+
+
+                # Calculate average vehicles involved
+                veh = (
+                    df.groupby("weather")["vehicles_involved"]
+                    .mean()
+                    .reset_index()
+                )
+
+
+                veh = (
+                    veh.sort_values(
+                        "vehicles_involved",
+                        ascending=False
+                    )
+                    .head(rows)
+                )
+
+
+                # Round values
+                veh["vehicles_involved"] = (
+                    veh["vehicles_involved"]
+                    .round(2)
+                )
+
+
+                # Display dataframe
+                st.dataframe(
+                    veh,
+                    use_container_width=True,
+                    hide_index=True
+                )
+
+
+                # =====================================================
+                # Plotly Figure Factory Table
+                # =====================================================
+
+                import plotly.figure_factory as ff
+
+
+                table_fig = ff.create_table(
+                    veh
+                )
+
+
+                table_fig.update_layout(
+                    title={
+                        "text":"🚗 Average Vehicles Involved by Weather",
+                        "x":0.5
+                    },
+
+                    template="plotly_dark",
+
+                    height=500
+                )
+
+
+                st.plotly_chart(
+                    table_fig,
+                    use_container_width=True
+                )
 
         # =====================================================
         # TAB 6 - TRAFFIC DENSITY
@@ -2315,6 +2641,7 @@ elif opt == "Visualization":
             )
 
 
+            # Count road type vs weather
             road = (
                 df.groupby(
                     ["road_type", "weather"]
@@ -2324,6 +2651,7 @@ elif opt == "Visualization":
             )
 
 
+            # Select top weather conditions
             top_weather = (
                 df["weather"]
                 .value_counts()
@@ -2337,13 +2665,39 @@ elif opt == "Visualization":
             ]
 
 
-            fig = px.bar(
+            # =====================================================
+            # Plotly Dot Plot
+            # =====================================================
+
+            fig = px.scatter(
                 road,
                 x="road_type",
                 y="Count",
+                size="Count",
                 color="weather",
-                barmode="group",
-                title="Road Type Distribution Across Weather Conditions"
+                hover_data=[
+                    "road_type",
+                    "weather",
+                    "Count"
+                ],
+                title="🛣️ Road Type Distribution Across Weather Conditions",
+                size_max=40
+            )
+
+
+            fig.update_traces(
+                marker=dict(
+                    opacity=0.8
+                )
+            )
+
+
+            fig.update_layout(
+                template="plotly_dark",
+                height=600,
+                title_x=0.5,
+                xaxis_title="Road Type",
+                yaxis_title="Accident Count"
             )
 
 
@@ -2351,8 +2705,7 @@ elif opt == "Visualization":
                 fig,
                 use_container_width=True
             )
-                    
-    # ================= ROAD TYPE =================
+            # ================= ROAD TYPE =================
     with tab_road:
 
         st.subheader("🛣️ Road Type Analysis")
@@ -3948,291 +4301,1120 @@ elif opt == "Visualization":
             )
 ##########################################################################################################################
 elif opt == "Accident Map":
-    map_tab = st.tabs(["🗺️ Accident Map"])[0]
+    st.markdown("""
+<style>
 
-    with map_tab:
-
-        st.subheader("🗺️ India Road Accident Map")
-
-        st.markdown("""
-        This map displays the geographical distribution of road accidents
-        across India using accident locations. The size and color of markers
-        represent accident severity and frequency.
-        """)
+body {
+    background-color: #061A40;
+}
 
 
-        # Group accident locations
-        accident_map = df.groupby(
-            ["state", "latitude", "longitude"]
-        ).size().reset_index(name="accident_count")
+/* Main App Background */
+.stApp {
+    background-color: #061A40;
+}
 
 
-        fig = px.scatter_mapbox(
-            accident_map,
-            lat="latitude",
-            lon="longitude",
-            size="accident_count",
-            color="accident_count",
-            hover_name="state",
-            zoom=3.5,
-            center={
-                "lat": 22.9734,
-                "lon": 78.6569
-            },
-            height=650,
-            title="Accident Locations Across India"
+/* All Text */
+h1, h2, h3, h4, h5, h6, p, label {
+    color: white !important;
+}
+
+
+/* Hover Effect for Text */
+p:hover, 
+h1:hover, 
+h2:hover, 
+h3:hover, 
+h4:hover,
+h5:hover,
+h6:hover,
+label:hover {
+
+    color: #00FFFF !important;
+    transition: 0.3s ease;
+
+}
+
+
+/* Sidebar Background */
+section[data-testid="stSidebar"] {
+
+    background-color: #03112B;
+
+}
+
+
+/* Sidebar Text Hover */
+section[data-testid="stSidebar"] p:hover,
+section[data-testid="stSidebar"] label:hover {
+
+    color: #FFD700 !important;
+
+}
+
+
+/* Markdown Text */
+.stMarkdown {
+
+    color: white;
+
+}
+
+
+/* Plot Container */
+div[data-testid="stPlotlyChart"] {
+
+    background-color: #061A40;
+
+}
+
+
+</style>
+""", unsafe_allow_html=True)
+
+    st.title("🗺️ India Road Accident Map")
+
+
+    # ==========================
+    # STATE WISE ACCIDENT DATA
+    # ==========================
+
+    state_accident = (
+        df.groupby(["state", "latitude", "longitude"])
+        .agg(
+            Total_Accidents=("accident_id", "count"),
+            Total_Casualties=("casualties", "sum")
+        )
+        .reset_index()
+    )
+
+
+    # ==========================
+    # INDIA ACCIDENT MAP
+    # ==========================
+
+    fig = px.scatter_mapbox(
+
+        state_accident,
+
+        lat="latitude",
+
+        lon="longitude",
+
+        size="Total_Accidents",
+
+        color="Total_Accidents",
+
+
+        color_continuous_scale=[
+
+            "#FFF5F0",
+            "#FFCCBC",
+            "#FF8A65",
+            "#FF5722",
+            "#B71C1C"
+
+        ],
+
+
+        hover_name="state",
+
+
+        hover_data={
+
+            "Total_Accidents": True,
+
+            "Total_Casualties": True,
+
+            "latitude": False,
+
+            "longitude": False
+
+        },
+
+
+        zoom=3.0,
+
+        height=600
+
+    )
+
+
+    fig.update_layout(
+
+        mapbox_style="carto-darkmatter",
+
+        paper_bgcolor="#061A40",
+
+        margin=dict(
+            l=0,
+            r=0,
+            t=50,
+            b=0
+        ),
+
+
+        title=dict(
+
+            text=" Road Accident State Hotspot Map",
+
+            font=dict(
+
+                size=22,
+
+                color="yellow"
+
+            )
+
         )
 
+    )
 
-        fig.update_layout(
-            mapbox_style="open-street-map",
-            margin={
-                "r":0,
-                "t":50,
-                "l":0,
-                "b":0
-            }
+
+    st.plotly_chart(
+
+        fig,
+
+        use_container_width=True
+
+    )
+
+  
+
+    # ==========================
+    # WEATHER SELECT BOX
+    # ==========================
+
+    weather_list = [
+        "All"
+    ] + sorted(
+        df["weather"].dropna().unique().tolist()
+    )
+
+
+    selected_weather = st.selectbox(
+        "🌦️ Select Weather Condition",
+        weather_list
+    )
+
+
+    # ==========================
+    # FILTER WEATHER DATA
+    # ==========================
+
+    if selected_weather == "All":
+
+        weather_map = df.copy()
+
+    else:
+
+        weather_map = df[
+            df["weather"] == selected_weather
+        ]
+
+
+    # ==========================
+    # GROUP DATA
+    # ==========================
+
+    weather_map = (
+        weather_map
+        .groupby(
+            [
+                "state",
+                "weather",
+                "latitude",
+                "longitude"
+            ]
+        )
+        .agg(
+            Total_Accidents=("accident_id", "count"),
+            Total_Casualties=("casualties", "sum")
+        )
+        .reset_index()
+    )
+
+
+    # ==========================
+    # CREATE MAP
+    # ==========================
+
+    fig = px.scatter_mapbox(
+
+        weather_map,
+
+        lat="latitude",
+
+        lon="longitude",
+
+        size="Total_Accidents",
+
+        color="Total_Accidents",
+
+
+        color_continuous_scale=[
+
+            "#FFF5F0",
+            "#FFCCBC",
+            "#FF8A65",
+            "#FF5722",
+            "#B71C1C"
+
+        ],
+
+
+        hover_name="state",
+
+
+        hover_data={
+
+            "weather": True,
+
+            "Total_Accidents": True,
+
+            "Total_Casualties": True,
+
+            "latitude": False,
+
+            "longitude": False
+
+        },
+
+
+        zoom=4,
+
+        height=600
+
+    )
+
+
+    # ==========================
+    # MAP DESIGN
+    # ==========================
+
+    fig.update_layout(
+
+        mapbox_style="carto-darkmatter",
+
+
+        paper_bgcolor="#061A40",
+
+        plot_bgcolor="#061A40",
+
+
+        margin=dict(
+
+            l=0,
+
+            r=0,
+
+            t=50,
+
+            b=0
+
+        ),
+
+
+        title=dict(
+
+            text=f"{selected_weather} Weather Accident Map"
+
+        ),
+
+
+        font=dict(
+
+            color="white",
+            size=22
+
+
         )
 
+    )
 
-        st.plotly_chart(
-            fig,
-            use_container_width=True
+
+    # ==========================
+    # DISPLAY MAP
+    # ==========================
+
+    st.plotly_chart(
+
+        fig,
+
+        use_container_width=True
+
+    )
+
+    # ==========================
+    # CITY SELECT BOX
+    # ==========================
+
+    city_list = [
+        "All"
+    ] + sorted(
+        df["city"].dropna().unique().tolist()
+    )
+
+
+    selected_city = st.selectbox(
+        "🏙️ Select City",
+        city_list
+    )
+
+
+    # ==========================
+    # FILTER CITY DATA
+    # ==========================
+
+    if selected_city == "All":
+
+        city_map = df.copy()
+
+    else:
+
+        city_map = df[
+            df["city"] == selected_city
+        ]
+
+
+    # ==========================
+    # GROUP CITY ACCIDENT DATA
+    # ==========================
+
+    city_map = (
+        city_map
+        .groupby(
+            [
+                "city",
+                "state",
+                "latitude",
+                "longitude"
+            ]
+        )
+        .agg(
+            Total_Accidents=("accident_id","count"),
+            Total_Casualties=("casualties","sum")
+        )
+        .reset_index()
+    )
+
+
+    # ==========================
+    # CREATE MAP
+    # ==========================
+
+    fig = px.scatter_mapbox(
+
+        city_map,
+
+        lat="latitude",
+
+        lon="longitude",
+
+        size="Total_Accidents",
+
+        color="Total_Accidents",
+
+
+        color_continuous_scale=[
+
+            "#FFF5F0",
+            "#FFCCBC",
+            "#FF8A65",
+            "#FF5722",
+            "#B71C1C"
+
+        ],
+
+
+        hover_name="city",
+
+        hover_data={
+
+            "state": True,
+
+            "Total_Accidents": True,
+
+            "Total_Casualties": True,
+
+            "latitude": False,
+
+            "longitude": False
+
+        },
+
+
+        zoom=4,
+
+        height=600
+
+    )
+
+
+    # ==========================
+    # MAP DESIGN
+    # ==========================
+
+    fig.update_layout(
+
+        mapbox_style="carto-darkmatter",
+
+        paper_bgcolor="#061A40",
+
+        plot_bgcolor="#061A40",
+
+
+        margin=dict(
+
+            l=0,
+
+            r=0,
+
+            t=50,
+
+            b=0
+
+        ),
+
+
+        title=dict(
+
+            text=f"{selected_city} Accident Map"
+
+        ),
+
+
+        font=dict(
+            color="white",
+            size=22
         )
 
+    )
+
+
+    st.plotly_chart(
+
+        fig,
+
+        use_container_width=True
+
+    )
     ##################################################################################################################
 elif opt == "About":
 
-    st.title("About Road Accident Analysis System")
+    # =========================
+    # CUSTOM CSS
+    # =========================
 
     st.markdown("""
-    The Road Accident Analysis System is a data analytics project developed to
-    analyze road accident patterns using the Indian Road Accident Dataset.
-    This system performs data processing, exploration, and visualization to
-    understand the major factors affecting road accidents.
+    <style>
 
-    The application provides interactive dashboards for analyzing accidents
-    based on location, time, weather conditions, road types, accident severity,
-    and vehicle involvement.
-    """)
+    .stApp {
+        background-color: #061A40;
+    }
 
 
-    about_tab1, about_tab2, about_tab3, about_tab4, about_tab5 = st.tabs([
-        "Project Overview",
-        "Objectives",
-        "Technology Stack",
-        "Dataset Information",
-        "Future Scope"
-    ])
+    /* Main title */
+    .about-title {
+        color: #38bdf8;
+        text-align:center;
+        font-size:42px;
+        font-weight:800;
+        margin-bottom:20px;
+    }
+
+
+    /* Description box */
+
+    .about-box {
+
+        background-color:#0B2A55;
+        padding:25px;
+        border-radius:20px;
+        color:white;
+        font-size:18px;
+        line-height:1.7;
+        box-shadow:0px 5px 20px rgba(0,0,0,0.4);
+    }
+
+
+
+    /* Cards */
+
+    .card {
+
+        background:#102E5C;
+        padding:25px;
+        border-radius:20px;
+        color:white;
+        margin:15px 0px;
+        box-shadow:0px 5px 15px rgba(0,0,0,0.5);
+        transition:0.3s;
+    }
+
+
+    .card:hover {
+
+        transform:scale(1.03);
+        background:#164A8A;
+    }
+
+
+
+    h2,h3 {
+
+        color:#38bdf8 !important;
+    }
+
+
+    p,li {
+
+        color:white;
+        font-size:17px;
+    }
+
+
+    /* Radio buttons */
+
+    div[role="radiogroup"] label {
+
+        background:#102E5C;
+        padding:12px 20px;
+        border-radius:15px;
+        margin:5px;
+        color:white;
+        cursor:pointer;
+        transition:0.3s;
+
+    }
+
+
+    div[role="radiogroup"] label:hover {
+
+        background:#38bdf8;
+        color:black;
+
+    }
+
+
+    </style>
+    """, unsafe_allow_html=True)
+
+
+
+    # =========================
+    # LOGO
+    # =========================
+
+    col1,col2,col3 = st.columns([1,2,1])
+
+
+    with col2:
+
+        try:
+
+            st.image(
+                "logo.png",
+                width=150
+            )
+
+        except:
+
+            pass
+
+
+
+    st.markdown(
+        "<div class='about-title'>🚦 Road Accident Analysis System</div>",
+        unsafe_allow_html=True
+    )
+
+
+
+    st.markdown("""
+    <div class="about-box">
+
+    The Road Accident Analysis System is a Data Science based application
+    developed to analyze Indian road accident patterns.
+
+    This dashboard performs data cleaning, exploration and visualization
+    to identify important accident factors such as location, weather,
+    road conditions, traffic density, accident severity and vehicle
+    involvement.
+
+    The system provides interactive insights to understand accident trends
+    and support road safety improvement.
+
+    </div>
+    """,unsafe_allow_html=True)
+
+
+
+    st.write("")
+
+
+
+    # =========================
+    # RADIO MENU
+    # =========================
+
+    option = st.radio(
+
+        "Explore About Section",
+
+        [
+            "Project Overview",
+            "Objectives",
+            "Technology Stack",
+            "Dataset Information",
+            "Future Scope"
+        ],
+
+        horizontal=True
+
+    )
 
 
 
     # =========================
     # PROJECT OVERVIEW
     # =========================
-    with about_tab1:
 
-        st.subheader("Project Overview")
+    if option=="Project Overview":
+
+
+        st.subheader("📌 Project Overview")
+
 
         st.markdown("""
-        Road accidents are one of the major causes of injuries and fatalities.
-        Analyzing accident data helps identify important patterns and factors
-        responsible for accidents.
+        <div class="card">
 
-        This project focuses on analyzing accident records and generating
-        meaningful insights through interactive visualizations. The dashboard
-        helps users explore accident trends and understand relationships between
-        different accident factors.
+        Road accidents are a serious social issue causing injuries and
+        fatalities worldwide.
 
-        The system analyzes:
+        This project analyzes accident records and generates meaningful
+        insights using interactive dashboards.
 
-        - Accident trends
-        - Location-based accident patterns
-        - Weather impact
-        - Road conditions
-        - Accident severity
-        - Vehicle involvement
-        - Risk score analysis
-        """)
+        <br>
+
+        <b>System Analyzes:</b>
+
+        <ul>
+        <li>Accident Trends</li>
+        <li>Location Based Analysis</li>
+        <li>Weather Impact</li>
+        <li>Road Condition Analysis</li>
+        <li>Accident Severity</li>
+        <li>Vehicle Involvement</li>
+        <li>Risk Score Analysis</li>
+        </ul>
+
+        </div>
+
+        """,unsafe_allow_html=True)
+
 
 
 
     # =========================
     # OBJECTIVES
     # =========================
-    with about_tab2:
 
-        st.subheader("Project Objectives")
+    elif option=="Objectives":
+
+
+        st.subheader("🎯 Project Objectives")
+
 
         st.markdown("""
-        The main objectives of this project are:
 
-        1. To analyze road accident patterns using real-world accident data.
+        <div class="card">
 
-        2. To identify factors responsible for accident occurrence and severity.
+        <ul>
 
-        3. To study the relationship between weather, roads, traffic,
-           and accident frequency.
+        <li>Analyze road accident patterns using real-world data.</li>
 
-        4. To visualize accident trends using interactive charts.
+        <li>Identify major causes affecting accident occurrence.</li>
 
-        5. To provide useful insights for improving road safety strategies.
+        <li>Study relationship between weather, roads and traffic.</li>
 
-        6. To support data-driven decision making.
-        """)
+        <li>Create interactive visualizations.</li>
+
+        <li>Generate useful road safety insights.</li>
+
+        <li>Support data-driven decision making.</li>
+
+        </ul>
+
+        </div>
+
+        """,unsafe_allow_html=True)
+
 
 
 
     # =========================
     # TECHNOLOGY STACK
     # =========================
-    with about_tab3:
 
-        st.subheader("Technology Stack")
-
-
-        col1, col2, col3 = st.columns(3)
+    elif option=="Technology Stack":
 
 
-        with col1:
+        st.subheader("💻 Technology Stack")
 
-            st.info("""
-            Programming Language
+
+        c1,c2,c3 = st.columns(3)
+
+
+
+        with c1:
+
+            st.markdown("""
+            <div class="card">
+
+            🐍 <b>Programming</b><br>                <br>
 
             Python
 
-            Data Processing
-
-            Pandas
+                <br>
+            Pandas<br>
             NumPy
-            """)
+
+            </div>
+            """,unsafe_allow_html=True)
 
 
-        with col2:
 
-            st.info("""
-            Visualization Tools
+        with c2:
 
-            Plotly
-            Matplotlib
+            st.markdown("""
+            <div class="card">
+
+            📊 <b>Visualization</b>
+
+            <br><br>
+
+            Plotly<br>
+            Matplotlib<br>
             Seaborn
-            """)
+
+            </div>
+            """,unsafe_allow_html=True)
 
 
-        with col3:
 
-            st.info("""
-            Application Development
+        with c3:
 
-            Streamlit
+            st.markdown("""
+            <div class="card">
 
-            Development Tool
+            🚀 <b>Development</b>
 
-            Visual Studio Code
-            """)
+            <br><br>
+
+            Streamlit<br>
+            VS Code
+
+            </div>
+            """,unsafe_allow_html=True)
+
+
 
 
 
     # =========================
     # DATASET INFORMATION
     # =========================
-    with about_tab4:
 
-        st.subheader("Dataset Information")
+    elif option=="Dataset Information":
+
+
+        st.subheader("📂 Dataset Information")
 
 
         st.markdown("""
-        Dataset Name:
 
+        <div class="card">
+
+        <b>Dataset Name:</b><br>
         Indian Road Accident Dataset 2022-2025
 
+        <br><br>
 
-        Dataset Size:
-
+        <b>Total Records:</b><br>
         20,000 Accident Records
 
 
-        Important Features:
+        <br><br>
 
-        - Accident ID
-        - City and State
-        - Latitude and Longitude
-        - Date and Time
-        - Road Type
-        - Weather Conditions
-        - Visibility
-        - Traffic Density
-        - Accident Cause
-        - Accident Severity
-        - Vehicles Involved
-        - Casualties
-        - Risk Score
+        <b>Main Features:</b>
+
+        <ul>
+
+        <li>Accident ID</li>
+        <li>City and State</li>
+        <li>Latitude Longitude</li>
+        <li>Date and Time</li>
+        <li>Weather Conditions</li>
+        <li>Road Type</li>
+        <li>Traffic Density</li>
+        <li>Accident Cause</li>
+        <li>Severity</li>
+        <li>Vehicles Involved</li>
+
+        </ul>
+
+        </div>
+
+        """,unsafe_allow_html=True)
 
 
-        The dataset is processed and cleaned before performing analysis.
-        """)
 
 
 
     # =========================
     # FUTURE SCOPE
     # =========================
-    with about_tab5:
 
-        st.subheader("Future Scope")
+    elif option=="Future Scope":
+
+
+        st.subheader("🚀 Future Scope")
 
 
         st.markdown("""
-        The project can be further enhanced with advanced features:
 
-        1. Integration of real-time accident data.
+        <div class="card">
 
-        2. Development of Machine Learning models for accident prediction.
+        <ul>
 
-        3. Interactive accident location maps using geographical visualization.
+        <li>Real-time accident data integration.</li>
 
-        4. Real-time risk monitoring system.
+        <li>Machine Learning accident prediction.</li>
 
-        5. Automated accident warning and alert system.
+        <li>Advanced geographical accident maps.</li>
 
-        6. Integration with traffic management platforms.
-        """)
+        <li>Real-time risk monitoring.</li>
+
+        <li>Automatic accident alert system.</li>
+
+        <li>Traffic management integration.</li>
+
+        </ul>
+
+        </div>
+
+        """,unsafe_allow_html=True)
+
 
 
 
     st.divider()
 
+
     st.caption(
-        "Developed as a Data Science Project using Python and Streamlit."
+        "🚦 Developed as a Data Science Project using Python, Plotly and Streamlit"
     )
 ################################################################################################################
-elif opt=="Query":
-    st.title("Ask Query")
-    st.write("ask question and answers")
-    a=st.chat_input("Ask Question")
-    if a:
+elif opt == "Query":
+    # Add this after st.title()
+
+    st.markdown("""
+<style>
+
+/* Main background */
+.stApp {
+    background-color: #0f172a;
+}
+
+
+/* Title */
+h1 {
+    color: #38bdf8;
+    text-align: center;
+    font-size: 40px;
+}
+
+
+/* Chat input box */
+.stChatInputContainer {
+    bottom: 20px;
+}
+
+
+.stChatInputContainer textarea {
+    background-color: #1e293b;
+    color: white;
+    border-radius: 15px;
+}
+
+
+/* User chat message */
+[data-testid="stChatMessage"]:has(div[data-testid="chatAvatarIcon-user"]) {
+    background-color: #2563eb;
+    border-radius: 15px;
+    padding: 15px;
+    margin: 10px;
+}
+
+
+/* AI chat message */
+[data-testid="stChatMessage"]:has(div[data-testid="chatAvatarIcon-assistant"]) {
+    background-color: #1e293b;
+    border-radius: 15px;
+    padding: 15px;
+    margin: 10px;
+}
+
+
+/* Chat text */
+[data-testid="stChatMessage"] p {
+    color: white;
+    font-size: 17px;
+}
+
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background-color: #020617;
+}
+
+
+section[data-testid="stSidebar"] h2 {
+    color: #38bdf8;
+}
+
+
+/* Buttons */
+.stButton button {
+    background-color: #2563eb;
+    color: white;
+    border-radius: 10px;
+    border: none;
+}
+
+
+.stButton button:hover {
+    background-color: #38bdf8;
+    color: black;
+}
+
+
+</style>
+""", unsafe_allow_html=True)
+    st.title("🤖 AI Query Assistant")
+    st.write("Ask questions and get AI answers")
+    
+    # Store chat history
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+
+    # Display previous chat
+    for message in st.session_state.messages:
+
+        if message["role"] == "user":
+            with st.chat_message("user"):
+                st.write(message["content"])
+
+        else:
+            with st.chat_message("assistant"):
+                st.write(message["content"])
+
+
+
+    # User input
+    user_question = st.chat_input("Ask your question...")
+
+
+    if user_question:
+
+        # Show user message
+        st.session_state.messages.append(
+            {
+                "role": "user",
+                "content": user_question
+            }
+        )
+
+
+        with st.chat_message("user"):
+            st.write(user_question)
+
+
+
+        # API URL
         url = "https://chatgpt-42.p.rapidapi.com/conversationgpt4-2"
 
+
         payload = {
+
             "messages": [
                 {
                     "role": "user",
-                    "content": a
+                    "content": user_question
                 }
             ],
-            "system_prompt": "",
+
+            "system_prompt": "You are a helpful AI assistant",
+
             "temperature": 0.9,
+
             "top_k": 5,
+
             "top_p": 0.9,
+
             "max_tokens": 256,
+
             "web_access": False
         }
+
+
         headers = {
-            "x-rapidapi-key": "4b2860e8b6mshfd1c7aa091a5abcp1fa192jsn0f79189fb419",
+            "x-rapidapi-key": "504143187dmsh024f58870c95798p1b7881jsn6da60a20a69b",
             "x-rapidapi-host": "chatgpt-42.p.rapidapi.com",
             "Content-Type": "application/json"
         }
 
-        response = requests.post(url, json=payload, headers=headers)
 
-        st.write(response.json()["result"])
+        # API request
+        response = requests.post(
+            url,
+            json=payload,
+            headers=headers
+        )
+
+
+        if response.status_code == 200:
+
+            data = response.json()
+
+
+            # Get AI response
+            ai_reply = data.get(
+                "result",
+                "Sorry, no response received."
+            )
+
+
+            # Show AI message
+            with st.chat_message("assistant"):
+                st.write(ai_reply)
+
+
+
+            # Save AI response
+            st.session_state.messages.append(
+                {
+                    "role": "assistant",
+                    "content": ai_reply
+                }
+            )
+
+
+        else:
+
+            st.error(
+                f"API Error: {response.status_code}"
+            )
