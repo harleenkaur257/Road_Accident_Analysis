@@ -45,7 +45,6 @@ font-weight:bold;
 color:"#FFD700";
 margin-bottom:5px;
 }
-
 .subtitle{
 text-align:center;
 font-size:18px;
