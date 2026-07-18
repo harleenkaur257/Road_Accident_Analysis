@@ -3,5 +3,5 @@ pandas
 numpy
 seaborn
 matplot
-streamlit-ption-menu
+streamlit-option-menu
 plotly
