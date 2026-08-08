@@ -1,153 +1,294 @@
 import streamlit as st
+from datetime import datetime
 
+# ---------------------------------------------------
+# PAGE CONFIG
+# ---------------------------------------------------
 st.set_page_config(
-    page_title="Login",
+    page_title="User Login",
     page_icon="🔐",
-    layout="wide",
-    # initial_sidebar_state="collapsed"
+    layout="wide"
 )
 
-# ---------------- Session ----------------
-
+# ---------------------------------------------------
+# SESSION STATE
+# ---------------------------------------------------
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
-# If already logged in
+if "username" not in st.session_state:
+    st.session_state.username = ""
+
+if "users" not in st.session_state:
+    st.session_state.users = {}
+
+if "login_history" not in st.session_state:
+    st.session_state.login_history = []
+
+
+# ---------------------------------------------------
+# IF ALREADY LOGGED IN
+# ---------------------------------------------------
 if st.session_state.logged_in:
     st.switch_page("pages/index.py")
 
-# ---------------- CSS ----------------
 
+# ---------------------------------------------------
+# CSS
+# ---------------------------------------------------
 st.markdown("""
 <style>
 
-/* Hide Streamlit Menu */
-#MainMenu{
-visibility:hidden;
-}
-header{
-visibility:hidden;
-}
-footer{
-visibility:hidden;
+.stApp {
+    background-color: #061A2E;
 }
 
-/* Background */
-.stApp{
-background:linear-gradient(135deg,#081B33,#0E2A4E,#17457A);
+.login-title {
+    font-size: 42px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    margin-top: 20px;
 }
 
-/* Heading */
-.title{
-text-align:center;
-font-size:42px;
-font-weight:bold;
-color:"#FFD700";
-margin-bottom:5px;
-}
-.subtitle{
-text-align:center;
-font-size:18px;
-color:#D6E4FF;
-margin-bottom:30px;
+.subtitle {
+    font-size: 20px;
+    color: #B8C7D9;
+    text-align: center;
+    margin-bottom: 30px;
 }
 
-/* Login Card */
-.login-box{
-background:rgba(255,255,255,0.08);
-padding:35px;
-border-radius:18px;
-backdrop-filter:blur(10px);
-box-shadow:0px 10px 25px rgba(0,0,0,.45);
+.login-box {
+    background-color: #0B2742;
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.4);
 }
 
-/* Labels */
-label{
-color:white !important;
-font-weight:bold;
-}
-
-/* Text Input */
-.stTextInput input{
-background:white;
-color:black;
-border-radius:10px;
-border:2px solid #4A90E2;
-padding:10px;
-}
-
-/* Focus */
-.stTextInput input:focus{
-border:2px solid #00D4FF;
-box-shadow:0px 0px 12px #00D4FF;
-}
-
-/* Login Button */
-div[data-testid="stFormSubmitButton"] button{
-
-width:100%;
-background:#1E88E5;
-color:white;
-font-size:18px;
-font-weight:bold;
-padding:12px;
-border-radius:10px;
-border:none;
-transition:0.4s;
-}
-
-/* Hover */
-div[data-testid="stFormSubmitButton"] button:hover{
-
-background:#00BFFF;
-transform:scale(1.03);
-box-shadow:0px 0px 15px #00BFFF;
-}
-
-/* Image */
-img{
-border-radius:20px;
+.history-title {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 40px;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- UI ----------------
 
-st.markdown("<h1 class='title'> User Login</h1>", unsafe_allow_html=True)
+# ---------------------------------------------------
+# TITLE
+# ---------------------------------------------------
+st.markdown(
+    "<div class='login-title'>User Login</div>",
+    unsafe_allow_html=True
+)
 
-st.markdown("<p class='subtitle'>Road Accident Analysis System</p>", unsafe_allow_html=True)
+st.markdown(
+    "<div class='subtitle'>Road Accident Analysis System</div>",
+    unsafe_allow_html=True
+)
 
-col1, col2 = st.columns([1,1])
 
+# ---------------------------------------------------
+# TWO COLUMNS
+# ---------------------------------------------------
+col1, col2 = st.columns([1, 1])
+
+
+# ===================================================
+# LEFT COLUMN
+# ===================================================
 with col1:
 
-    # st.markdown("<div class='login-box'>", unsafe_allow_html=True)
+    st.markdown(
+        "<div class='login-box'>",
+        unsafe_allow_html=True
+    )
 
-    with st.form("login_form"):
+    login_tab, signup_tab = st.tabs(
+        [" Login", "📝 Sign Up"]
+    )
 
-        username = st.text_input("Username")
 
-        password = st.text_input("Password", type="password")
+    # =================================================
+    # LOGIN
+    # =================================================
+    with login_tab:
 
-        login = st.form_submit_button("Login")
+        st.subheader("Login")
 
-    st.markdown("</div>", unsafe_allow_html=True)
+        with st.form("login_form"):
 
-    if login:
+            username = st.text_input(
+                "Username",
+                placeholder="Enter your username"
+            )
 
-        if username == "admin" and password == "1234":
+            password = st.text_input(
+                "Password",
+                type="password",
+                placeholder="Enter your password"
+            )
 
-            st.session_state.logged_in = True
+            login = st.form_submit_button(
+                " Login",
+                use_container_width=True
+            )
 
-            st.success("Login Successful!")
+        if login:
 
-            st.switch_page("pages/index.py")
+            username = username.strip()
 
-        else:
+            if username == "" or password == "":
+                st.warning(
+                    "Please enter username and password."
+                )
 
-            st.error("Invalid Username or Password")
+            elif username in st.session_state.users:
 
+                if st.session_state.users[username] == password:
+
+                    # Save login history
+                    st.session_state.login_history.append({
+                        "Username": username,
+                        "Status": "Successful",
+                        "Time": datetime.now().strftime(
+                            "%Y-%m-%d %H:%M:%S"
+                        )
+                    })
+
+                    st.session_state.logged_in = True
+                    st.session_state.username = username
+
+                    st.success("Login Successful!")
+
+                    st.switch_page("pages/index.py")
+
+                else:
+
+                    st.session_state.login_history.append({
+                        "Username": username,
+                        "Status": "Failed",
+                        "Time": datetime.now().strftime(
+                            "%Y-%m-%d %H:%M:%S"
+                        )
+                    })
+
+                    st.error("Invalid password.")
+
+            else:
+
+                st.session_state.login_history.append({
+                    "Username": username,
+                    "Status": "Failed",
+                    "Time": datetime.now().strftime(
+                        "%Y-%m-%d %H:%M:%S"
+                    )
+                })
+
+                st.error(
+                    "Username does not exist. Please Sign Up first."
+                )
+
+
+    # =================================================
+    # SIGN UP
+    # =================================================
+    with signup_tab:
+
+        st.subheader("Create Account")
+
+        with st.form("signup_form"):
+
+            new_username = st.text_input(
+                "Create Username",
+                placeholder="Enter username"
+            )
+
+            new_password = st.text_input(
+                "Create Password",
+                type="password",
+                placeholder="Enter password"
+            )
+
+            confirm_password = st.text_input(
+                "Confirm Password",
+                type="password",
+                placeholder="Enter password again"
+            )
+
+            signup = st.form_submit_button(
+                "📝 Create Account",
+                use_container_width=True
+            )
+
+        if signup:
+
+            new_username = new_username.strip()
+
+            if (
+                new_username == ""
+                or new_password == ""
+                or confirm_password == ""
+            ):
+
+                st.warning(
+                    "Please fill all fields."
+                )
+
+            elif new_password != confirm_password:
+
+                st.error(
+                    "Passwords do not match."
+                )
+
+            elif new_username in st.session_state.users:
+
+                st.error(
+                    "Username already exists."
+                )
+
+            else:
+
+                st.session_state.users[new_username] = new_password
+
+                st.success(
+                    "Account created successfully! "
+                    "Now go to Login."
+                )
+
+
+    st.markdown(
+        "</div>",
+        unsafe_allow_html=True
+    )
+
+
+# ===================================================
+# RIGHT COLUMN
+# ===================================================
 with col2:
 
     st.video("login.mp4")
+
+
+# ===================================================
+# LOGIN HISTORY
+# ===================================================
+st.markdown(
+    "<div class='history-title'>📜 Login History</div>",
+    unsafe_allow_html=True
+)
+
+if st.session_state.login_history:
+
+    st.dataframe(
+        st.session_state.login_history,
+        use_container_width=True,
+        hide_index=True
+    )
+
+else:
+
+    st.info("No login activity yet.")
