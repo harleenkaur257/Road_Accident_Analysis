@@ -4330,6 +4330,783 @@ h1, h2, h3, h4, h5, h6, p, label, div {
             )
 ##########################################################################################################################
 
+elif opt == "Accident Map":
+
+    # ============================================================
+    # ACCIDENT MAP PAGE CSS
+    # ============================================================
+
+    st.markdown("""
+    <style>
+
+    body {
+        background-color: #061A40;
+    }
+
+    .stApp {
+        background-color: #061A40;
+    }
+
+    h1, h2, h3, h4, h5, h6, p, label {
+        color: white !important;
+    }
+
+    p:hover,
+    h1:hover,
+    h2:hover,
+    h3:hover,
+    h4:hover,
+    h5:hover,
+    h6:hover,
+    label:hover {
+        color: #00FFFF !important;
+        transition: 0.3s ease;
+    }
+
+    section[data-testid="stSidebar"] {
+        background-color: #03112B;
+    }
+
+    section[data-testid="stSidebar"] p:hover,
+    section[data-testid="stSidebar"] label:hover {
+        color: #FFD700 !important;
+    }
+
+    .stMarkdown {
+        color: white;
+    }
+
+    div[data-testid="stPlotlyChart"] {
+        background-color: #061A40;
+        border-radius: 10px;
+    }
+
+    </style>
+    """, unsafe_allow_html=True)
+
+
+    # ============================================================
+    # PAGE TITLE
+    # ============================================================
+
+    st.title("🗺️ India Road Accident Map")
+
+    st.write(
+        "Explore road accidents across India using state, "
+        "weather and city based interactive maps."
+    )
+
+
+    # ============================================================
+    # CHECK REQUIRED COLUMNS
+    # ============================================================
+
+    required_columns = [
+        "state",
+        "city",
+        "latitude",
+        "longitude",
+        "accident_id",
+        "casualties",
+        "weather"
+    ]
+
+
+    missing_columns = [
+        column
+        for column in required_columns
+        if column not in df.columns
+    ]
+
+
+    if missing_columns:
+
+        st.error(
+            "The following columns are missing from the dataset:"
+        )
+
+        st.write(missing_columns)
+
+        st.stop()
+
+
+    # ============================================================
+    # COPY DATA
+    # ============================================================
+
+    map_df = df.copy()
+
+
+    # ============================================================
+    # CONVERT LOCATION COLUMNS TO NUMERIC
+    # ============================================================
+
+    map_df["latitude"] = pd.to_numeric(
+        map_df["latitude"],
+        errors="coerce"
+    )
+
+
+    map_df["longitude"] = pd.to_numeric(
+        map_df["longitude"],
+        errors="coerce"
+    )
+
+
+    map_df["casualties"] = pd.to_numeric(
+        map_df["casualties"],
+        errors="coerce"
+    )
+
+
+    map_df["casualties"] = map_df[
+        "casualties"
+    ].fillna(0)
+
+
+    # ============================================================
+    # REMOVE INVALID LATITUDE / LONGITUDE
+    # ============================================================
+
+    map_df = map_df.dropna(
+        subset=[
+            "latitude",
+            "longitude"
+        ]
+    ).copy()
+
+
+    # ============================================================
+    # KEEP ONLY INDIA COORDINATES
+    # ============================================================
+
+    map_df = map_df[
+        (map_df["latitude"] >= 6) &
+        (map_df["latitude"] <= 38) &
+        (map_df["longitude"] >= 68) &
+        (map_df["longitude"] <= 98)
+    ].copy()
+
+
+    # ============================================================
+    # CHECK LOCATION DATA
+    # ============================================================
+
+    if map_df.empty:
+
+        st.error(
+            "No valid latitude and longitude data is available."
+        )
+
+        st.info(
+            "Check whether your dataset contains valid "
+            "latitude and longitude values."
+        )
+
+        st.stop()
+
+
+    # ============================================================
+    # STATE ACCIDENT MAP
+    # ============================================================
+
+    st.markdown(
+        "## 🇮🇳 State Wise Accident Hotspot Map"
+    )
+
+
+    # ============================================================
+    # STATE DATA
+    # ============================================================
+
+    state_accident = (
+
+        map_df
+
+        .groupby(
+            [
+                "state",
+                "latitude",
+                "longitude"
+            ]
+        )
+
+        .agg(
+
+            Total_Accidents=(
+                "accident_id",
+                "count"
+            ),
+
+            Total_Casualties=(
+                "casualties",
+                "sum"
+            )
+
+        )
+
+        .reset_index()
+
+    )
+
+
+    # ============================================================
+    # STATE MAP
+    # ============================================================
+
+    if not state_accident.empty:
+
+        fig = px.scatter_map(
+
+            state_accident,
+
+            lat="latitude",
+
+            lon="longitude",
+
+            size="Total_Accidents",
+
+            color="Total_Accidents",
+
+            color_continuous_scale=[
+
+                "#FFF5F0",
+                "#FFCCBC",
+                "#FF8A65",
+                "#FF5722",
+                "#B71C1C"
+
+            ],
+
+            hover_name="state",
+
+            hover_data={
+
+                "Total_Accidents": True,
+
+                "Total_Casualties": True,
+
+                "latitude": False,
+
+                "longitude": False
+
+            },
+
+            zoom=3.2,
+
+            center={
+
+                "lat": 22.5,
+
+                "lon": 79.0
+
+            },
+
+            height=600
+
+        )
+
+
+        fig.update_layout(
+
+            map_style="open-street-map",
+
+            paper_bgcolor="#061A40",
+
+            plot_bgcolor="#061A40",
+
+            margin=dict(
+
+                l=0,
+
+                r=0,
+
+                t=60,
+
+                b=0
+
+            ),
+
+            title=dict(
+
+                text="Road Accident State Hotspot Map",
+
+                font=dict(
+
+                    size=22,
+
+                    color="yellow"
+
+                )
+
+            ),
+
+            font=dict(
+
+                color="white"
+
+            )
+
+        )
+
+
+        st.plotly_chart(
+
+            fig,
+
+            use_container_width=True,
+
+            key="state_accident_map"
+
+        )
+
+
+    else:
+
+        st.warning(
+            "No state accident data available."
+        )
+
+
+    # ============================================================
+    # WEATHER SECTION
+    # ============================================================
+
+    st.markdown(
+        "## 🌦️ Weather Based Accident Map"
+    )
+
+
+    # ============================================================
+    # WEATHER SELECT BOX
+    # ============================================================
+
+    weather_values = (
+
+        map_df["weather"]
+
+        .dropna()
+
+        .astype(str)
+
+        .unique()
+
+        .tolist()
+
+    )
+
+
+    weather_list = [
+
+        "All"
+
+    ] + sorted(weather_values)
+
+
+    selected_weather = st.selectbox(
+
+        "🌦️ Select Weather Condition",
+
+        weather_list,
+
+        key="weather_select"
+
+    )
+
+
+    # ============================================================
+    # FILTER WEATHER DATA
+    # ============================================================
+
+    if selected_weather == "All":
+
+        weather_data = map_df.copy()
+
+    else:
+
+        weather_data = map_df[
+            map_df["weather"].astype(str)
+            == selected_weather
+        ].copy()
+
+
+    # ============================================================
+    # GROUP WEATHER DATA
+    # ============================================================
+
+    weather_map = (
+
+        weather_data
+
+        .groupby(
+
+            [
+                "state",
+                "weather",
+                "latitude",
+                "longitude"
+            ]
+
+        )
+
+        .agg(
+
+            Total_Accidents=(
+                "accident_id",
+                "count"
+            ),
+
+            Total_Casualties=(
+                "casualties",
+                "sum"
+            )
+
+        )
+
+        .reset_index()
+
+    )
+
+
+    # ============================================================
+    # WEATHER MAP
+    # ============================================================
+
+    if not weather_map.empty:
+
+        fig = px.scatter_map(
+
+            weather_map,
+
+            lat="latitude",
+
+            lon="longitude",
+
+            size="Total_Accidents",
+
+            color="Total_Accidents",
+
+            color_continuous_scale=[
+
+                "#FFF5F0",
+                "#FFCCBC",
+                "#FF8A65",
+                "#FF5722",
+                "#B71C1C"
+
+            ],
+
+            hover_name="state",
+
+            hover_data={
+
+                "weather": True,
+
+                "Total_Accidents": True,
+
+                "Total_Casualties": True,
+
+                "latitude": False,
+
+                "longitude": False
+
+            },
+
+            zoom=3.5,
+
+            center={
+
+                "lat": 22.5,
+
+                "lon": 79.0
+
+            },
+
+            height=600
+
+        )
+
+
+        fig.update_layout(
+
+            map_style="open-street-map",
+
+            paper_bgcolor="#061A40",
+
+            plot_bgcolor="#061A40",
+
+            margin=dict(
+
+                l=0,
+
+                r=0,
+
+                t=60,
+
+                b=0
+
+            ),
+
+            title=dict(
+
+                text=f"{selected_weather} Weather Accident Map",
+
+                font=dict(
+
+                    size=22,
+
+                    color="yellow"
+
+                )
+
+            ),
+
+            font=dict(
+
+                color="white"
+
+            )
+
+        )
+
+
+        st.plotly_chart(
+
+            fig,
+
+            use_container_width=True,
+
+            key="weather_accident_map"
+
+        )
+
+
+    else:
+
+        st.warning(
+            "No accident data available for this weather condition."
+        )
+
+
+    # ============================================================
+    # CITY SECTION
+    # ============================================================
+
+    st.markdown(
+        "## 🏙️ City Wise Accident Map"
+    )
+
+
+    # ============================================================
+    # CITY SELECT BOX
+    # ============================================================
+
+    city_values = (
+
+        map_df["city"]
+
+        .dropna()
+
+        .astype(str)
+
+        .unique()
+
+        .tolist()
+
+    )
+
+
+    city_list = [
+
+        "All"
+
+    ] + sorted(city_values)
+
+
+    selected_city = st.selectbox(
+
+        "🏙️ Select City",
+
+        city_list,
+
+        key="city_select"
+
+    )
+
+
+    # ============================================================
+    # FILTER CITY DATA
+    # ============================================================
+
+    if selected_city == "All":
+
+        city_data = map_df.copy()
+
+    else:
+
+        city_data = map_df[
+            map_df["city"].astype(str)
+            == selected_city
+        ].copy()
+
+
+    # ============================================================
+    # GROUP CITY DATA
+    # ============================================================
+
+    city_map = (
+
+        city_data
+
+        .groupby(
+
+            [
+                "city",
+                "state",
+                "latitude",
+                "longitude"
+            ]
+
+        )
+
+        .agg(
+
+            Total_Accidents=(
+                "accident_id",
+                "count"
+            ),
+
+            Total_Casualties=(
+                "casualties",
+                "sum"
+            )
+
+        )
+
+        .reset_index()
+
+    )
+
+
+    # ============================================================
+    # CITY MAP
+    # ============================================================
+
+    if not city_map.empty:
+
+        fig = px.scatter_map(
+
+            city_map,
+
+            lat="latitude",
+
+            lon="longitude",
+
+            size="Total_Accidents",
+
+            color="Total_Accidents",
+
+            color_continuous_scale=[
+
+                "#FFF5F0",
+                "#FFCCBC",
+                "#FF8A65",
+                "#FF5722",
+                "#B71C1C"
+
+            ],
+
+            hover_name="city",
+
+            hover_data={
+
+                "state": True,
+
+                "Total_Accidents": True,
+
+                "Total_Casualties": True,
+
+                "latitude": False,
+
+                "longitude": False
+
+            },
+
+            zoom=3.5,
+
+            center={
+
+                "lat": 22.5,
+
+                "lon": 79.0
+
+            },
+
+            height=600
+
+        )
+
+
+        fig.update_layout(
+
+            map_style="open-street-map",
+
+            paper_bgcolor="#061A40",
+
+            plot_bgcolor="#061A40",
+
+            margin=dict(
+
+                l=0,
+
+                r=0,
+
+                t=60,
+
+                b=0
+
+            ),
+
+            title=dict(
+
+                text=f"{selected_city} Accident Map",
+
+                font=dict(
+
+                    size=22,
+
+                    color="yellow"
+
+                )
+
+            ),
+
+            font=dict(
+
+                color="white"
+
+            )
+
+        )
+
+
+        st.plotly_chart(
+
+            fig,
+
+            use_container_width=True,
+
+            key="city_accident_map"
+
+        )
+
+
+    else:
+
+        st.warning(
+            "No accident data available for this city."
+        )
+
     ##################################################################################################################
 elif opt == "About":
 
@@ -4751,7 +5528,7 @@ elif opt == "Query":
     # Add this after st.title()
 
     st.markdown("""
-<style>
+    <style>
 
 /* Main background */
 .stApp {
