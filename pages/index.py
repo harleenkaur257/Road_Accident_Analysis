@@ -1,8 +1,7 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 import plotly.express as px  
-import plotly.graph_objects as go
-#visualization
+import plotly.graph_objects as go #visualization
 import pandas as pd
 import requests
 import base64
@@ -901,7 +900,6 @@ elif opt == "Processing":
     t1, t2, t3, t4, t5 = st.tabs([
         "📌 Original Data",
         "❓ Missing Values",
-        "🧹 Processing Steps",
         "✅ Cleaned Data",
         "📊 Summary"
     ])
@@ -1254,6 +1252,37 @@ elif opt == "Visualization":
         # TAB 1 : STATE VS ACCIDENT COUNT
         # ==========================================================
         with state_tab1:
+            st.markdown("""
+<style>
+
+/* Main app background */
+.stApp {
+    background-color: #061A40;
+}
+
+/* Plotly graph container background */
+[data-testid="stPlotlyChart"] {
+    background-color: #061A40 !important;
+    border: 2px solid #1B3B6F;
+    border-radius: 15px;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/* Plotly toolbar background */
+.js-plotly-plot .plotly .modebar {
+    background: #061A40 !important;
+    border-radius: 10px;
+}
+
+/* White text for headings and labels */
+h1, h2, h3, h4, h5, h6, p, label, div {
+    color: white !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
 
             st.subheader("📊 State-wise Accident Distribution")
 
