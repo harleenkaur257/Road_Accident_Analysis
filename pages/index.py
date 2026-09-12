@@ -1037,7 +1037,7 @@ elif opt == "Processing":
     # ==========================================================
     # Cleaned Dataset
     # ==========================================================
-    with t4:
+    with t3:
 
         st.subheader("✅ Dataset After Processing")
 
@@ -1129,7 +1129,7 @@ elif opt == "Processing":
     # ==========================================================
     # Summary
     # ==========================================================
-    with t5:
+    with t4:
 
         st.subheader("📊 Processing Summary")
 
