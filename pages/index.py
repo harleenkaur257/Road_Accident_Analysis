@@ -897,7 +897,7 @@ elif opt == "Processing":
     during analysis.
     """)
 
-    t1, t2, t3, t4, t5 = st.tabs([
+    t1, t2, t3, t4= st.tabs([
         "📌 Original Data",
         "❓ Missing Values",
         "✅ Cleaned Data",
